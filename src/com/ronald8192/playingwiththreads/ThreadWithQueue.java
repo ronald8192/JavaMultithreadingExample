@@ -33,7 +33,9 @@ public class ThreadWithQueue implements Runnable {
 	public void run() {
 		if (begin == -1) begin = System.currentTimeMillis();
 		while (clq.size() > 0) {
-			int sthToProcess = pollResourcesFromQueue();
+			//ConcurrentLinkedQueue is thread-safe
+			//int sthToProcess = pollResourcesFromQueue();
+			int sthToProcess = clq.poll();
 			try {
 				// do the thing
 				Thread.sleep(pauseTime);
@@ -59,9 +61,11 @@ public class ThreadWithQueue implements Runnable {
 		}
 	}
 	/**
+	 * Use this if the queue is not thread-safe.
 	 * Get and remove next element from queue. 
 	 * @return next queue element
 	 */
+	@SuppressWarnings("unused")
 	synchronized private static int pollResourcesFromQueue() {
 		return clq.poll();
 	}
